@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">IBM Master Chef</string>
 
-    <string name="dummy_button">View Statistics</string>
+    <string name="view_stats">View Statistics</string>
+    <string name="chef_vote">Chef Voting</string>
+    <string name="gen_vote">General Voting</string>
     <string name="dummy_content"></string>
+    <string name="title_activity_statistics">Statistics</string>
+    <string name="add_group">Add Group</string>
+    <string name="delete_group">Delete Group</string>
+    <string name="edit_group">Edit Group</string>
 </resources>

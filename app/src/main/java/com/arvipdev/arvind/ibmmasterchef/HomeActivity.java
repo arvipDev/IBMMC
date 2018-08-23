@@ -1,6 +1,7 @@
 package com.arvipdev.arvind.ibmmasterchef;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.ActionBar;
@@ -9,12 +10,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -74,6 +76,7 @@ public class HomeActivity extends AppCompatActivity {
      * Touch listener to use for in-layout UI controls to delay hiding the
      * system UI. This is to prevent the jarring behavior of controls going away
      * while interacting with activity UI.
+
      */
     private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
         @Override
@@ -84,7 +87,6 @@ public class HomeActivity extends AppCompatActivity {
             return false;
         }
     };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,6 +96,15 @@ public class HomeActivity extends AppCompatActivity {
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.fullscreen_content);
+
+        Button main_button_1 = (Button)findViewById(R.id.view_stats) ;
+        main_button_1.setOnClickListener(this);
+
+        Button main_button_2 = (Button)findViewById(R.id.chef_vote) ;
+        main_button_2.setOnClickListener(this);
+
+        Button main_button_3 = (Button)findViewById(R.id.gen_vote) ;
+        main_button_3.setOnClickListener(this);
 
 
         // Set up the user interaction to manually show or hide the system UI.
@@ -107,7 +118,6 @@ public class HomeActivity extends AppCompatActivity {
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
-        findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
     }
 
     @Override
@@ -131,10 +141,9 @@ public class HomeActivity extends AppCompatActivity {
     private void hide() {
         // Hide UI first
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#3C3C3C")));
-        if (actionBar != null) {
-            actionBar.hide();
-        }
+        actionBar.hide();
         mControlsView.setVisibility(View.GONE);
         mVisible = false;
 
@@ -162,5 +171,24 @@ public class HomeActivity extends AppCompatActivity {
     private void delayedHide(int delayMillis) {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
+    }
+
+    @Override
+    public void onClick(View view) {
+
+        switch (view.getId()){
+            case R.id.view_stats:
+                Intent newIntent = new Intent(this, StatisticsActivity.class);
+                startActivity(newIntent);
+                break;
+            case R.id.chef_vote:
+                Intent newIntent2 = new Intent(this, StatisticsActivity.class);
+                startActivity(newIntent2);
+                break;
+            case R.id.gen_vote:
+                Intent newIntent3 = new Intent(this, StatisticsActivity.class);
+                startActivity(newIntent3);
+                break;
+        }
     }
 }

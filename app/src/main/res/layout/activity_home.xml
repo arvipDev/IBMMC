@@ -12,42 +12,71 @@
         android:id="@+id/fullscreen_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/ibm"
         android:gravity="center"
         android:keepScreenOn="true"
+        android:padding="10dp"
         android:text="@string/dummy_content"
-        android:textColor="#33b5e5"
+        android:textColor="@android:color/white"
         android:textSize="50sp"
         android:textStyle="bold" />
 
     <!-- This FrameLayout insets its children based on system windows using
          android:fitsSystemWindows. -->
-    <FrameLayout
+    <LinearLayout
+        android:id="@+id/fullscreen_content_controls"
+        style="?metaButtonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="15dp"
+        android:layout_gravity="center"
         android:background="@drawable/ibm"
-        android:fitsSystemWindows="true">
+        android:orientation="horizontal"
+        android:weightSum="3"
+        tools:ignore="UselessParent">
 
-        <LinearLayout
-            android:id="@+id/fullscreen_content_controls"
-            style="?metaButtonBarStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:background="@color/black_overlay"
-            android:orientation="horizontal"
-            tools:ignore="UselessParent">
+        <Button
+            android:id="@+id/view_stats"
+            style="?metaButtonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:paddingBottom="10dp"
+            android:background="@drawable/main_button"
+            android:text="@string/view_stats"
+            android:gravity="bottom|center"
+            android:textColor="@color/btnText"
+            android:textSize="35sp"/>
 
-            <Button
-                android:id="@+id/dummy_button"
-                style="?metaButtonBarButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@color/colorStats"
-                android:layout_weight="1"
-                android:text="@string/dummy_button" />
+        <Button
+            android:id="@+id/chef_vote"
+            style="?metaButtonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="bottom|center"
+            android:paddingBottom="10dp"
+            android:background="@drawable/main_button"
+            android:text="@string/chef_vote"
+            android:textColor="@color/btnText"
+            android:textSize="35sp" />
 
-        </LinearLayout>
-    </FrameLayout>
+        <Button
+            android:id="@+id/gen_vote"
+            style="?metaButtonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:gravity="bottom|center"
+            android:paddingBottom="10dp"
+            android:background="@drawable/main_button"
+            android:text="@string/gen_vote"
+            android:textColor="@color/btnText"
+            android:textSize="35sp" />
+
+    </LinearLayout>
 
 </FrameLayout>

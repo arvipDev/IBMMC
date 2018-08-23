@@ -3,7 +3,17 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="colorBckG">#606060</color>
-    <color name="colorStats">#3C3C3C</color>
+    <color name="colorBckG">#212121</color>
+    <color name="colorBckG2">#20606060</color>
+    <color name="colorBtn1">#8029B6F6</color>
+    <color name="colorBtn2">#80E57373</color>
+    <color name="colorBtn3">#80CDDC39</color>
+    <color name="rallyDG">#1EB980</color>
+    <color name="pinkypk">#F50057</color>
     <color name="black_overlay">#66000000</color>
+    <color name="black">#000000</color>
+    <color name="btnText">#60FFFFFF</color>
+    <color name="statsTB">#3C3C3C</color>
+    <color name="statsTTB">#B2EBF2</color>
+
 </resources>
