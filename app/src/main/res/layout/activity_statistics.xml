@@ -38,15 +38,6 @@
                 android:textColor="@android:color/white"
                 android:text="@string/delete_group" />
 
-            <Button
-                android:id="@+id/edit_gp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:background="@drawable/main_button3"
-                android:textColor="@android:color/white"
-                android:text="@string/edit_group" />
-
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
