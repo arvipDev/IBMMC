@@ -17,10 +17,14 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static java.sql.Types.NULL;
+
 public class StatisticsActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private ArrayList<String> groups = new ArrayList<>();
-    private String gp_name;
+    //private ArrayList<String> groups = new ArrayList<>();
+    //private String gp_name;
+    private ArrayList<BaseGroup> groups = new ArrayList<>();
+    private BaseGroup group;
     private ListView group_LV;
 
     @Override
@@ -35,6 +39,7 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         delete_gp.setOnClickListener(this);
 
         group_LV = (ListView) findViewById(R.id.mainListView);
+        group = new BaseGroup();
 
         Log.d("List Size", "" + groups.isEmpty());
 
@@ -64,18 +69,37 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
 
 
         builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+            boolean contains = true;
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                gp_name = input.getText().toString();
-                if(gp_name.matches("")){
-                    Toast.makeText(getApplicationContext(), "Please enter a valid title for the group", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    Log.d("Name", gp_name);
-                    addToList(gp_name);
+                if (input.getText().toString().matches(""))
+                    Toast.makeText(getApplicationContext(), "Enter a valid group name.", Toast.LENGTH_SHORT).show();
+                else if(groups.size() == 0) {
+                    group.setName(input.getText().toString());
+                    groups.add(group);
+                    Log.d("Name", group.getName());
                     Log.d("out", "" + groups.size());
+                } else {
+                    for (BaseGroup gp : groups) {
+                        Log.d("inside for  ", input.getText().toString());
+                        if(gp.getName().matches(input.getText().toString())){
+                            Log.d("Group exists: ", input.getText().toString());
+                            Log.d("out", "" + groups.size());
+                            contains = true;
+                            Toast.makeText(getApplicationContext(), "Group already exists, enter another name.", Toast.LENGTH_SHORT).show();
+                            break;
+                        } else {
+                            contains = false;
+                            Log.d("new: ", input.getText().toString());
+                        }
+                    }
+                    if(!contains){
+                        group.setName(input.getText().toString());
+                        groups.add(group);
+                        Log.d("Name", group.getName());
+                        Log.d("out", "" + groups.size());
+                    }
                 }
-
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -90,6 +114,7 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
     private void deleteDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Enter group's title");
+        Log.d("out", "" + groups.size());
 
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -99,13 +124,15 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                gp_name = input.getText().toString();
-                if(gp_name.matches("")){
-                    Toast.makeText(getApplicationContext(), "Please enter a valid title for the group", Toast.LENGTH_SHORT).show();
+                int index = -1;
+                for (BaseGroup gp : groups) {
+                    if(gp.getName().matches(input.getText().toString()))
+                        index = groups.indexOf(gp);
+                    else Toast.makeText(getApplicationContext(), "Please enter a valid title for the group", Toast.LENGTH_SHORT).show();
                 }
-                else {
-                    Log.d("Name", gp_name);
-                    deleteGroups(gp_name);
+                if (index > -1){
+                    groups.remove(index);
+                    Log.d("Name", "" + groups.get(index).getName());
                     Log.d("out", "" + groups.size());
                 }
 
@@ -118,44 +145,6 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
             }
         });
         builder.show();
-    }
-
-    private void addToList(String gp_name){
-        groups.add(gp_name);
-        storeGroups(groups);
-    }
-
-    private void storeGroups (ArrayList<String> groupsList){
-        SharedPreferences prefs = getSharedPreferences("group", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-
-        try{
-            editor.putString("GroupList",  ObjectSerializer.serialize(groupsList));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        editor.apply();
-    }
-
-    private ArrayList<String> getGroups () {
-        ArrayList<String> groupsList   = new ArrayList<>();
-        SharedPreferences prefs = getSharedPreferences("User", Context.MODE_PRIVATE);
-        try {
-            groupsList = (ArrayList<String>) ObjectSerializer.deserialize(prefs.getString("GroupList", ObjectSerializer.serialize(new ArrayList())));
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return groupsList;
-    }
-
-    private ArrayList<String> deleteGroups (String gpName) {
-        ArrayList<String> groupsList = getGroups();
-        groupsList.remove(gpName);
-        storeGroups(groupsList);
-        groups = groupsList;
-        return groupsList;
     }
 
 }

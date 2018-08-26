@@ -156,7 +156,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(newIntent);
                 break;
             case R.id.chef_vote:
-                Intent newIntent2 = new Intent(this, StatisticsActivity.class);
+                Intent newIntent2 = new Intent(this, ChefActivity.class);
                 startActivity(newIntent2);
                 break;
             case R.id.gen_vote:
