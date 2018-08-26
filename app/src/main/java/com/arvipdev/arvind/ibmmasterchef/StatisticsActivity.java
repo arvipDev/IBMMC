@@ -1,9 +1,7 @@
 package com.arvipdev.arvind.ibmmasterchef;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
@@ -14,15 +12,11 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
-import static java.sql.Types.NULL;
 
 public class StatisticsActivity extends AppCompatActivity implements View.OnClickListener {
-
-    //private ArrayList<String> groups = new ArrayList<>();
-    //private String gp_name;
+    
     private ArrayList<BaseGroup> groups = new ArrayList<>();
     private BaseGroup group;
     private ListView group_LV;
