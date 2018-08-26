@@ -97,6 +97,7 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
                 int index = -1;
                 for (BaseGroup gp : groups) {
                     if(gp.getName().matches(input.getText().toString()))
@@ -151,5 +152,7 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
             }
         }
     }
+
+    private void removeFromList (String name) {}
 
 }
