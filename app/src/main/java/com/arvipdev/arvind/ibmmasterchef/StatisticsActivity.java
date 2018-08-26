@@ -72,34 +72,7 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
             boolean contains = true;
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (input.getText().toString().matches(""))
-                    Toast.makeText(getApplicationContext(), "Enter a valid group name.", Toast.LENGTH_SHORT).show();
-                else if(groups.size() == 0) {
-                    group.setName(input.getText().toString());
-                    groups.add(group);
-                    Log.d("Name", group.getName());
-                    Log.d("out", "" + groups.size());
-                } else {
-                    for (BaseGroup gp : groups) {
-                        Log.d("inside for  ", input.getText().toString());
-                        if(gp.getName().matches(input.getText().toString())){
-                            Log.d("Group exists: ", input.getText().toString());
-                            Log.d("out", "" + groups.size());
-                            contains = true;
-                            Toast.makeText(getApplicationContext(), "Group already exists, enter another name.", Toast.LENGTH_SHORT).show();
-                            break;
-                        } else {
-                            contains = false;
-                            Log.d("new: ", input.getText().toString());
-                        }
-                    }
-                    if(!contains){
-                        group.setName(input.getText().toString());
-                        groups.add(group);
-                        Log.d("Name", group.getName());
-                        Log.d("out", "" + groups.size());
-                    }
-                }
+                addToList (input.getText().toString());
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -145,6 +118,38 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
             }
         });
         builder.show();
+    }
+
+    private void addToList (String name){
+        boolean contains = true;
+        if (name.matches(""))
+            Toast.makeText(getApplicationContext(), "Enter a valid group name.", Toast.LENGTH_SHORT).show();
+        else if(groups.size() == 0) {
+            group.setName(name);
+            groups.add(group);
+            Log.d("Name", group.getName());
+            Log.d("out", "" + groups.size());
+        } else {
+            for (BaseGroup gp : groups) {
+                Log.d("inside for  ", name);
+                if(gp.getName().matches(name)){
+                    Log.d("Group exists: ", name);
+                    Log.d("out", "" + groups.size());
+                    contains = true;
+                    Toast.makeText(getApplicationContext(), "Group already exists, enter another name.", Toast.LENGTH_SHORT).show();
+                    break;
+                } else {
+                    contains = false;
+                    Log.d("new: ", name);
+                }
+            }
+            if(!contains){
+                group.setName(name);
+                groups.add(group);
+                Log.d("Name", group.getName());
+                Log.d("out", "" + groups.size());
+            }
+        }
     }
 
 }
