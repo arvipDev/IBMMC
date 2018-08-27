@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 
 public class StatisticsActivity extends AppCompatActivity implements View.OnClickListener {
-    
+
     private ArrayList<BaseGroup> groups = new ArrayList<>();
     private BaseGroup group;
     private ListView group_LV;
@@ -63,7 +63,6 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
 
 
         builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
-            boolean contains = true;
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 addToList (input.getText().toString());
@@ -91,19 +90,7 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
-                int index = -1;
-                for (BaseGroup gp : groups) {
-                    if(gp.getName().matches(input.getText().toString()))
-                        index = groups.indexOf(gp);
-                    else Toast.makeText(getApplicationContext(), "Please enter a valid title for the group", Toast.LENGTH_SHORT).show();
-                }
-                if (index > -1){
-                    groups.remove(index);
-                    Log.d("Name", "" + groups.get(index).getName());
-                    Log.d("out", "" + groups.size());
-                }
-
+                removeFromList(input.getText().toString());
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -147,6 +134,18 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private void removeFromList (String name) {}
+    private void removeFromList (String name) {
+        int index = -1;
+        for (BaseGroup gp : groups) {
+            if(gp.getName().matches(name))
+                index = groups.indexOf(gp);
+            else Toast.makeText(getApplicationContext(), "Please enter a valid title for the group", Toast.LENGTH_SHORT).show();
+        }
+        if (!groups.isEmpty()){
+            groups.remove(index);
+            Log.d("Name", "" + groups.get(index).getName());
+            Log.d("out", "" + groups.size());
+        }
+    }
 
 }
