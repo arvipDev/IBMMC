@@ -1,6 +1,7 @@
 package com.arvipdev.arvind.ibmmasterchef;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 
@@ -104,11 +106,14 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
 
     private void addToList (String name){
         boolean contains = true;
+        BaseGroupJson jsonConv = new BaseGroupJson();
+
         if (name.matches(""))
             Toast.makeText(getApplicationContext(), "Enter a valid group name.", Toast.LENGTH_SHORT).show();
         else if(groups.size() == 0) {
             group.setName(name);
             groups.add(group);
+            jsonConv.gpJson(group);
             Log.d("Name", group.getName());
             Log.d("out", "" + groups.size());
         } else {
@@ -141,11 +146,23 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
                 index = groups.indexOf(gp);
             else Toast.makeText(getApplicationContext(), "Please enter a valid title for the group", Toast.LENGTH_SHORT).show();
         }
-        if (!groups.isEmpty()){
+        if (index > -1){
             groups.remove(index);
             Log.d("Name", "" + groups.get(index).getName());
             Log.d("out", "" + groups.size());
         }
     }
 
+    private void writeJson (String json){
+        String filename = "config.json";
+        FileOutputStream outputStream;
+
+        try {
+            outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
+            outputStream.write(json.getBytes());
+            outputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
