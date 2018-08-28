@@ -1,32 +1,30 @@
 package com.arvipdev.arvind.ibmmasterchef;
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 class BaseGroupJson {
 
-    public String gpJson (ArrayList<BaseGroup> gps) {
+    String gpJson(ArrayList<BaseGroup> gps) {
 
         try{
-            JSONObject main = new JSONObject();
             JSONArray groups = new JSONArray();
-            
-            JSONObject jsonObj = new JSONObject();
-            jsonObj.put("gp_name", group.getName());
-
-            JSONArray jsonCand = new JSONArray();
-            for(BaseCandidate cand: group.getCandidates()){
-                JSONObject jsonObj2 = new JSONObject();
-                jsonObj2.put("c_name", cand.getName());
-                jsonObj2.put("c_id", cand.getEmp_Id());
-                jsonCand.put(jsonObj2);
+            Log.d("json", "" + gps.size());
+            for (BaseGroup gp: gps){
+                JSONObject group = new JSONObject();
+                group.put("group_name", gp.getName());
+                group.put("time_stamp", gp.getTimeStamp());
+                groups.put(group);
             }
-            jsonObj.put("candidates", jsonCand);
-            groups.put(jsonObj);
-            main.put("groups", groups);
-            return main.toString();
+            JSONObject jsonGroup = new JSONObject();
+            jsonGroup.put("groups", groups);
+            Log.d("JSON", jsonGroup.toString());
+            return jsonGroup.toString();
         } catch(JSONException ex) {
             ex.printStackTrace();
         }

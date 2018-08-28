@@ -13,15 +13,21 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 
 public class StatisticsActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private ArrayList<BaseGroup> groups = new ArrayList<>();
+    private ArrayList<BaseGroup> groups;
     private BaseGroup group;
     private ListView group_LV;
+    private BaseGroupJson groupJson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +41,8 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         delete_gp.setOnClickListener(this);
 
         group_LV = (ListView) findViewById(R.id.mainListView);
-        group = new BaseGroup();
+        groups = new ArrayList<>();
+        groupJson = new BaseGroupJson();
 
         Log.d("List Size", "" + groups.isEmpty());
 
@@ -68,6 +75,10 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 addToList (input.getText().toString());
+                writeJson(groupJson.gpJson(groups));
+                print(groups);
+                readJson();
+                Log.d("read", readJson());
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -105,36 +116,23 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void addToList (String name){
-        boolean contains = true;
-        BaseGroupJson jsonConv = new BaseGroupJson();
-
-        if (name.matches(""))
-            Toast.makeText(getApplicationContext(), "Enter a valid group name.", Toast.LENGTH_SHORT).show();
-        else if(groups.size() == 0) {
-            group.setName(name);
+        if(groups.size() == 0 && !name.matches("")){
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            group = new BaseGroup(name, timestamp.getTime());
             groups.add(group);
-            jsonConv.gpJson(group);
-            Log.d("Name", group.getName());
-            Log.d("out", "" + groups.size());
-        } else {
+        } else if (groups.size() > 0 && !name.matches("")) {
             for (BaseGroup gp : groups) {
-                Log.d("inside for  ", name);
                 if(gp.getName().matches(name)){
-                    Log.d("Group exists: ", name);
-                    Log.d("out", "" + groups.size());
-                    contains = true;
                     Toast.makeText(getApplicationContext(), "Group already exists, enter another name.", Toast.LENGTH_SHORT).show();
-                    break;
-                } else {
-                    contains = false;
-                    Log.d("new: ", name);
+                    return;
                 }
             }
-            if(!contains){
-                group.setName(name);
-                groups.add(group);
-                Log.d("Name", group.getName());
-                Log.d("out", "" + groups.size());
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            group = new BaseGroup(name, timestamp.getTime());
+            groups.add(group);
+        } else {
+            if(name.matches("")){
+                Toast.makeText(getApplicationContext(), "Enter a valid group name.", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -163,6 +161,33 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
             outputStream.close();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private String readJson () {
+        String filename = "config.json";
+        StringBuffer stringBuffer = new StringBuffer();
+        try {
+            BufferedReader inputReader = new BufferedReader(new InputStreamReader(
+                    openFileInput(filename)));
+            String inputString;
+            while ((inputString = inputReader.readLine()) != null) {
+                stringBuffer.append(inputString).append("\n");
+            }
+            return stringBuffer.toString();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return "";
+    }
+
+    private void print (ArrayList<BaseGroup> gp){
+        Log.d("size", "" + gp.size());
+        for(BaseGroup bp: gp){
+            Log.d("name", bp.getName());
+            Log.d("ts",""+ bp.getTimeStamp());
         }
     }
 }
