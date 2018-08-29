@@ -1,4 +1,4 @@
-package com.arvipdev.arvind.ibmmasterchef;
+package com.arvipdev.arvind.ibmmasterchef.com.model.ibmmasterchef;
 
 /**
  * Created by ARVIND on 8/23/2018.

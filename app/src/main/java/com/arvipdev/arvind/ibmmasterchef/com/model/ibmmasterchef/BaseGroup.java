@@ -1,4 +1,4 @@
-package com.arvipdev.arvind.ibmmasterchef;
+package com.arvipdev.arvind.ibmmasterchef.com.model.ibmmasterchef;
 import java.util.ArrayList;
 
 public class BaseGroup extends ArrayList<BaseGroup> {

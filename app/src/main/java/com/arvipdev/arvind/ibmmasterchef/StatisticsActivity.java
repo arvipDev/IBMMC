@@ -1,7 +1,6 @@
 package com.arvipdev.arvind.ibmmasterchef;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,11 +12,9 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import com.arvipdev.arvind.ibmmasterchef.com.model.ibmmasterchef.BaseGroup;
+import com.arvipdev.arvind.ibmmasterchef.com.model.ibmmasterchef.BaseGroupJson;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
@@ -75,10 +72,8 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 addToList (input.getText().toString());
-                writeJson(groupJson.gpJson(groups));
+                groupJson.gpJson(groups);
                 print(groups);
-                readJson();
-                Log.d("read", readJson());
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -120,6 +115,7 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
             group = new BaseGroup(name, timestamp.getTime());
             groups.add(group);
+            Log.d("out", "" + groups.size());
         } else if (groups.size() > 0 && !name.matches("")) {
             for (BaseGroup gp : groups) {
                 if(gp.getName().matches(name)){
@@ -130,6 +126,7 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
             group = new BaseGroup(name, timestamp.getTime());
             groups.add(group);
+            Log.d("out", "" + groups.size());
         } else {
             if(name.matches("")){
                 Toast.makeText(getApplicationContext(), "Enter a valid group name.", Toast.LENGTH_SHORT).show();
@@ -151,37 +148,6 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private void writeJson (String json){
-        String filename = "config.json";
-        FileOutputStream outputStream;
-
-        try {
-            outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
-            outputStream.write(json.getBytes());
-            outputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private String readJson () {
-        String filename = "config.json";
-        StringBuffer stringBuffer = new StringBuffer();
-        try {
-            BufferedReader inputReader = new BufferedReader(new InputStreamReader(
-                    openFileInput(filename)));
-            String inputString;
-            while ((inputString = inputReader.readLine()) != null) {
-                stringBuffer.append(inputString).append("\n");
-            }
-            return stringBuffer.toString();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return "";
-    }
 
     private void print (ArrayList<BaseGroup> gp){
         Log.d("size", "" + gp.size());

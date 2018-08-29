@@ -1,16 +1,15 @@
-package com.arvipdev.arvind.ibmmasterchef;
+package com.arvipdev.arvind.ibmmasterchef.com.model.ibmmasterchef;
 import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
-class BaseGroupJson {
+public class BaseGroupJson {
 
-    String gpJson(ArrayList<BaseGroup> gps) {
+    public String gpJson(ArrayList<BaseGroup> gps) {
 
         try{
             JSONArray groups = new JSONArray();
