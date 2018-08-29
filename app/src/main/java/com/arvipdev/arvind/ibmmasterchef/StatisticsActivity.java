@@ -2,11 +2,13 @@ package com.arvipdev.arvind.ibmmasterchef;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -14,17 +16,20 @@ import android.widget.Toast;
 
 import com.arvipdev.arvind.ibmmasterchef.com.model.ibmmasterchef.BaseGroup;
 import com.arvipdev.arvind.ibmmasterchef.com.model.ibmmasterchef.BaseGroupJson;
+import com.arvipdev.arvind.ibmmasterchef.com.service.ibmmasterchef.CustomGroupAdapter;
+import com.arvipdev.arvind.ibmmasterchef.com.service.ibmmasterchef.DatabaseHandler;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
 
-public class StatisticsActivity extends AppCompatActivity implements View.OnClickListener {
+public class StatisticsActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     private ArrayList<BaseGroup> groups;
     private BaseGroup group;
     private ListView group_LV;
     private BaseGroupJson groupJson;
+    private DatabaseHandler group_DB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,13 +43,11 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         delete_gp.setOnClickListener(this);
 
         group_LV = (ListView) findViewById(R.id.mainListView);
+
         groups = new ArrayList<>();
         groupJson = new BaseGroupJson();
-
-        Log.d("List Size", "" + groups.isEmpty());
-
+        group_DB = new DatabaseHandler(this);
     }
-
 
     @Override
     public void onClick(View view) {
@@ -52,11 +55,20 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         switch (view.getId()){
             case R.id.add_gp:
                 createDialog();
+                CustomGroupAdapter adapter = new CustomGroupAdapter(this, groups);
+                group_LV.setAdapter(adapter);
+                group_LV.setOnItemClickListener(this);
                 break;
             case R.id.delete_gp:
                 deleteDialog();
                 break;
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        Intent candActivity = new Intent(this, CandidateActivity.class);
+        startActivity(candActivity);
     }
 
     private void createDialog(){
@@ -67,13 +79,10 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(input);
 
-
         builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                addToList (input.getText().toString());
-                groupJson.gpJson(groups);
-                print(groups);
+                addToList(input.getText().toString());
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -95,10 +104,10 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         builder.setView(input);
 
 
-        builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                removeFromList(input.getText().toString());
+
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -107,47 +116,14 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
                 dialog.cancel();
             }
         });
+        builder.setNeutralButton("Delete all", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                group_DB.deleteAll();
+            }
+        });
         builder.show();
     }
-
-    private void addToList (String name){
-        if(groups.size() == 0 && !name.matches("")){
-            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-            group = new BaseGroup(name, timestamp.getTime());
-            groups.add(group);
-            Log.d("out", "" + groups.size());
-        } else if (groups.size() > 0 && !name.matches("")) {
-            for (BaseGroup gp : groups) {
-                if(gp.getName().matches(name)){
-                    Toast.makeText(getApplicationContext(), "Group already exists, enter another name.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-            }
-            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-            group = new BaseGroup(name, timestamp.getTime());
-            groups.add(group);
-            Log.d("out", "" + groups.size());
-        } else {
-            if(name.matches("")){
-                Toast.makeText(getApplicationContext(), "Enter a valid group name.", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    private void removeFromList (String name) {
-        int index = -1;
-        for (BaseGroup gp : groups) {
-            if(gp.getName().matches(name))
-                index = groups.indexOf(gp);
-            else Toast.makeText(getApplicationContext(), "Please enter a valid title for the group", Toast.LENGTH_SHORT).show();
-        }
-        if (index > -1){
-            groups.remove(index);
-            Log.d("Name", "" + groups.get(index).getName());
-            Log.d("out", "" + groups.size());
-        }
-    }
-
 
     private void print (ArrayList<BaseGroup> gp){
         Log.d("size", "" + gp.size());
@@ -156,4 +132,31 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
             Log.d("ts",""+ bp.getTimeStamp());
         }
     }
+
+    private void addToList (String name){
+        if(group_DB.getAllvalues().size() == 0 && !name.matches("")){
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            group = new BaseGroup(name, timestamp.getTime());
+            Log.d("2 name", group.getName());
+            Log.d("2 input", name);
+            groups = group_DB.add(group);
+        } else if (group_DB.getAllvalues().size() > 0 && !name.matches("")) {
+            for (BaseGroup gp : group_DB.getAllvalues()) {
+                Log.d("1 name", gp.getName());
+                Log.d("1 input", name);
+                if(gp.getName().matches(name)){
+                    Toast.makeText(getApplicationContext(), "Group already exists, enter another name.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            group = new BaseGroup(name, timestamp.getTime());
+            groups = group_DB.add(group);
+        } else {
+            if(name.matches("")){
+                Toast.makeText(getApplicationContext(), "Enter a valid group name.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 }
