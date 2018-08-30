@@ -39,6 +39,7 @@
         <activity
             android:name=".ChefActivity"
             android:label="@string/title_activity_chef"
+            android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.CHEF" />
@@ -49,6 +50,7 @@
         <activity
             android:name=".CandidateActivity"
             android:label="@string/title_activity_candidate"
+            android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.CAND" />

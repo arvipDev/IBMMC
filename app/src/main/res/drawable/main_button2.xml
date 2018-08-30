@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-    <gradient android:startColor="@color/colorBckG2"
-        android:endColor="@color/colorBckG2"
-        android:angle="270" />
-    <corners android:radius="4dp" />
-    <stroke android:width="2px" android:color="#EEFF41" />
-</shape>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/main_button_focused2" android:state_pressed="true"/>
+    <!-- focused state -->
+    <item android:drawable="@drawable/main_button_normal2" android:state_focused="true"/>
+    <!-- default state -->
+    <item android:drawable="@drawable/main_button_normal2"/>
+</selector>
