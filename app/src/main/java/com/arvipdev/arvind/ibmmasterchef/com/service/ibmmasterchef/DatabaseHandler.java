@@ -3,14 +3,11 @@ package com.arvipdev.arvind.ibmmasterchef.com.service.ibmmasterchef;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.arvipdev.arvind.ibmmasterchef.com.model.ibmmasterchef.BaseGroup;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class DatabaseHandler extends SQLiteOpenHelper
@@ -82,7 +79,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
         deleted_gp = getAllvalues();
         for (BaseGroup group: deleted_gp){
             if (gp.getName().matches(group.getName())){
-                deleted_gp.remove(group);
+                deleteOne(group.getTimeStamp());
                 return deleted_gp;
             }
         }
@@ -101,6 +98,12 @@ public class DatabaseHandler extends SQLiteOpenHelper
 
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from " + TABLE_Groups);
+        db.close();
+    }
+
+    public void deleteOne(Long tstamp) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + TABLE_Groups + " where " + KEY_TIMESTAMP + " = " + tstamp);
         db.close();
     }
 
